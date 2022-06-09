@@ -4,7 +4,7 @@
   "description": "Ejercicio servicios API para un salon de clases",
   "main": "index.js",
   "scripts": {
-    "dev": "export DEBUG=class-api:* && nodemon -e js --exec node src/server"
+    "dev": "set DEBUG=class-api:* && nodemon -e js --exec node src/server"
   },
   "repository": {
     "type": "git",
