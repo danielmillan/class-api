@@ -11,7 +11,7 @@ const logger = debug('class-api:app');
 const app = express();
 
 // Middlewares
-app.use(express.urlencoded(false));
+app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(morgan('dev'));
 

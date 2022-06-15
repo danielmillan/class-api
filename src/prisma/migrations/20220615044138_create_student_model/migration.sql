@@ -1,0 +1,12 @@
+-- CreateTable
+CREATE TABLE `Students` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `names` VARCHAR(30) NOT NULL,
+    `last_names` VARCHAR(30) NOT NULL,
+    `code` VARCHAR(10) NOT NULL,
+    `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updated_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `status` BOOLEAN NOT NULL DEFAULT true,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
