@@ -1,0 +1,20 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Students {
+  id         Int      @id @default(autoincrement())
+  names      String   @db.VarChar(30)
+  last_names String   @db.VarChar(30)
+  code       String   @db.VarChar(10)
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+  grade      Int
+  status     Boolean  @default(true)
+  deleted    Boolean  @default(false)
+}
