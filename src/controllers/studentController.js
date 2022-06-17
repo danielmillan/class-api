@@ -4,45 +4,45 @@ const StudentService = require('../services/studentService');
 const studentController = Router();
 
 studentController.get('/students', async (request, response) => {
-  const resultService = await StudentService.listaEstudiantes();
+  const resultService = await StudentService.listStudents();
   response.send(resultService);
 });
 
 studentController.get('/students/:id', async (request, response) => {
   const studentId = Number(request.params.id);
-  const resultService = await StudentService.buscarEstudiantePorId(studentId);
+  const resultService = await StudentService.findStudentById(studentId);
   response.send(resultService);
 });
 
 studentController.post('/students', async (request, response) => {
-  const estudiante = {
+  const student = {
     names: request.body.names,
     last_names: request.body.last_names,
     code: request.body.code,
     grade: request.body.grade,
   };
-  const resultService = await StudentService.crearEstudiante(estudiante);
+  const resultService = await StudentService.createStudent(student);
   response.send(resultService);
 });
 
 studentController.put('/students/:id', async (request, response) => {
-  const estudiante = {
+  const student = {
     names: request.body.names,
     last_names: request.body.last_names,
     code: request.body.code,
     grade: request.body.grade,
   };
   const studentId = Number(request.params.id);
-  const resultService = await StudentService.editarEstudiante(
+  const resultService = await StudentService.editStudent(
     studentId,
-    estudiante
+    student
   );
   response.send(resultService);
 });
 
 studentController.delete('/students/:id', async (request, response) => {
   const studentId = Number(request.params.id);
-  const resultService = await StudentService.eliminarEstudiante(studentId);
+  const resultService = await StudentService.deleteStudent(studentId);
   response.send(resultService);
 });
 
