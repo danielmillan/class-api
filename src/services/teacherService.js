@@ -16,7 +16,7 @@ class TeacherService {
   };
 
   static findTeacherById = async (id) => {
-    logger('Obteniendo listado de estudiantes');
+    logger('Obteniendo listado de docentes');
     const listTeachers = await prisma.teachers.findUnique({
       where: {
         id,
@@ -29,7 +29,7 @@ class TeacherService {
     logger('Se ha agregado el docente %s', teacher.names);
     await prisma.teachers.create({
       data: teacher,
-    })
+    });
     return 'Se ha creado el docente';
   };
 
@@ -54,7 +54,7 @@ class TeacherService {
         deleted: true,
       },
     });
-    return 'Se ha eliminado el estudiante';
+    return 'Se ha eliminado el docente';
   };
 }
 

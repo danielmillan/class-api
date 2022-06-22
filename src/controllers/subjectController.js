@@ -1,5 +1,4 @@
 const { Router } = require('express');
-const { request, response } = require('../app');
 const SubjectService = require('../services/subjectService');
 
 const subjectController = Router();
@@ -9,19 +8,18 @@ subjectController.get('/subjects', async (request, response) => {
   response.send(resultService);
 });
 
-subjectController.get('/subjects/:id', async (request, response)=>{
+subjectController.get('/subjects/:id', async (request, response) => {
   const subjectId = Number(request.params.id);
   const resultService = await SubjectService.findSubjectById(subjectId);
-response.send(resultService);
+  response.send(resultService);
 });
-
 
 subjectController.post('/subjects', async (request, response) => {
   const subject = {
     name: request.body.name,
     teacher: request.body.teacher,
   };
-const resultService = await SubjectService.createSubjects(subject)
+  const resultService = await SubjectService.createSubjects(subject);
 
   response.send(resultService);
 });
@@ -33,10 +31,7 @@ subjectController.put('/subjects/:id', async (request, response) => {
   };
   //logger('se ha recibido el docente', docente);
   const teacherId = Number(request.params.id);
-  const resultService = await SubjectService.editSubject(
-    teacherId,
-    subject
-  )
+  const resultService = await SubjectService.editSubject(teacherId, subject);
   response.send(resultService);
 });
 
