@@ -3,18 +3,18 @@ const StudentService = require('../services/studentService');
 
 const studentController = Router();
 
-studentController.get('/students', async (request, response) => {
+studentController.get('/', async (request, response) => {
   const resultService = await StudentService.listStudents();
   response.send(resultService);
 });
 
-studentController.get('/students/:id', async (request, response) => {
+studentController.get('/:id', async (request, response) => {
   const studentId = Number(request.params.id);
   const resultService = await StudentService.findStudentById(studentId);
   response.send(resultService);
 });
 
-studentController.post('/students', async (request, response) => {
+studentController.post('/', async (request, response) => {
   const student = {
     names: request.body.names,
     last_names: request.body.last_names,
@@ -25,7 +25,7 @@ studentController.post('/students', async (request, response) => {
   response.send(resultService);
 });
 
-studentController.put('/students/:id', async (request, response) => {
+studentController.put('/:id', async (request, response) => {
   const student = {
     names: request.body.names,
     last_names: request.body.last_names,
@@ -33,16 +33,25 @@ studentController.put('/students/:id', async (request, response) => {
     grade: request.body.grade,
   };
   const studentId = Number(request.params.id);
-  const resultService = await StudentService.editStudent(
-    studentId,
-    student
-  );
+  const resultService = await StudentService.editStudent(studentId, student);
   response.send(resultService);
 });
 
-studentController.delete('/students/:id', async (request, response) => {
+studentController.delete('/:id', async (request, response) => {
   const studentId = Number(request.params.id);
   const resultService = await StudentService.deleteStudent(studentId);
+  response.send(resultService);
+});
+
+studentController.post('/courses/register', async (request, response) => {
+  const register = {
+    studentId: Number(request.body.studentId),
+    courseId: Number(request.body.courseId),
+  };
+  const resultService = await StudentService.registerStudentInACourse(
+    register.studentId,
+    register.courseId
+  );
   response.send(resultService);
 });
 

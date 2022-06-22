@@ -3,18 +3,18 @@ const SubjectService = require('../services/subjectService');
 
 const subjectController = Router();
 
-subjectController.get('/subjects', async (request, response) => {
+subjectController.get('/', async (request, response) => {
   const resultService = await SubjectService.listSubjects();
   response.send(resultService);
 });
 
-subjectController.get('/subjects/:id', async (request, response) => {
+subjectController.get('/:id', async (request, response) => {
   const subjectId = Number(request.params.id);
   const resultService = await SubjectService.findSubjectById(subjectId);
   response.send(resultService);
 });
 
-subjectController.post('/subjects', async (request, response) => {
+subjectController.post('/', async (request, response) => {
   const subject = {
     name: request.body.name,
     teacher: request.body.teacher,
@@ -24,7 +24,7 @@ subjectController.post('/subjects', async (request, response) => {
   response.send(resultService);
 });
 
-subjectController.put('/subjects/:id', async (request, response) => {
+subjectController.put('/:id', async (request, response) => {
   const subject = {
     name: request.body.name,
     teacher: request.body.teacher,
@@ -35,7 +35,7 @@ subjectController.put('/subjects/:id', async (request, response) => {
   response.send(resultService);
 });
 
-subjectController.delete('/subjects/:id', async (request, response) => {
+subjectController.delete('/:id', async (request, response) => {
   const subjectId = Number(request.params.id);
   const resultService = await SubjectService.deleteSubject(subjectId);
   response.send(resultService);

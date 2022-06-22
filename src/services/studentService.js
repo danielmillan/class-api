@@ -56,6 +56,14 @@ class StudentService {
     });
     return 'Se ha eliminado el estudiante';
   };
+
+  static registerStudentInACourse = async (studentId, courseId) => {
+    logger('registrando el estudiante %s al curso %s:', studentId, courseId);
+    await prisma.students_from_Courses.create({
+      data: { studentId, courseId },
+    });
+    return 'Estudiante matriculado al curso';
+  };
 }
 
 module.exports = StudentService;

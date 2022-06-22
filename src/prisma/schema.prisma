@@ -8,32 +8,79 @@ generator client {
 }
 
 model Students {
-  id         Int      @id @default(autoincrement())
-  names      String   @db.VarChar(30)
-  last_names String   @db.VarChar(30)
-  code       String   @db.VarChar(10)
-  grade      Int      @db.Int
-  created_at DateTime @default(now())
-  updated_at DateTime @default(now())
-  status     Boolean  @default(true)
-  deleted    Boolean  @default(false)
+  id                    Int                     @id @default(autoincrement())
+  names                 String                  @db.VarChar(30)
+  last_names            String                  @db.VarChar(30)
+  code                  String                  @db.VarChar(10)
+  created_at            DateTime                @default(now())
+  updated_at            DateTime                @default(now())
+  status                Boolean                 @default(true)
+  deleted               Boolean                 @default(false)
+  Students_from_Courses Students_from_Courses[]
+
+  @@unique([code])
 }
 
 model Teachers {
-  id         Int      @id @default(autoincrement())
-  names      String   @db.VarChar(30)
-  last_names String   @db.VarChar(30)
-  subject    String   @db.VarChar(30)
-  grade      Int      @db.Int //Puede ser un JSON
-  created_at DateTime @default(now())
-  updated_at DateTime @default(now())
-  status     Boolean  @default(true)
-  deleted    Boolean  @default(false)
+  id                      Int                       @id @default(autoincrement())
+  names                   String                    @db.VarChar(30)
+  last_names              String                    @db.VarChar(30)
+  created_at              DateTime                  @default(now())
+  updated_at              DateTime                  @default(now())
+  status                  Boolean                   @default(true)
+  deleted                 Boolean                   @default(false)
+  Subjects__from_Teachers Subjects__from_Teachers[]
+  Courses                 Courses[]
 }
 
 model Subjects {
-  id      Int     @id @default(autoincrement())
-  name    String  @db.VarChar(30)
-  teacher String  @db.VarChar(30)
-  deleted Boolean @default(false)
+  id                      Int                       @id @default(autoincrement())
+  name                    String                    @db.VarChar(30)
+  status                  Boolean                   @default(true)
+  deleted                 Boolean                   @default(false)
+  Subjects__from_Teachers Subjects__from_Teachers[]
 }
+
+model Subjects__from_Teachers {
+  id        Int      @id @default(autoincrement())
+  teacher   Teachers @relation(fields: [teacherId], references: [id])
+  teacherId Int
+  subject   Subjects @relation(fields: [subjectId], references: [id])
+  subjectId Int
+
+  @@unique([teacherId, subjectId])
+}
+
+model Grades {
+  id          Int       @id @default(autoincrement())
+  gradeNumber Int
+  alias       String
+  Courses     Courses[]
+}
+
+model Courses {
+  id             Int      @id @default(autoincrement())
+  courseNumber   Int
+  grade          Grades   @relation(fields: [gradeId], references: [id])
+  gradeId        Int
+  teacher        Teachers @relation(fields: [teacherManager], references: [id])
+  teacherManager Int
+  status         Boolean  @default(true)
+
+  Students_from_Courses Students_from_Courses[]
+  @@unique([teacherManager])
+}
+
+model Students_from_Courses {
+  id        Int      @id @default(autoincrement())
+  student   Students @relation(fields: [studentId], references: [id])
+  studentId Int
+  course    Courses  @relation(fields: [courseId], references: [id])
+  courseId  Int
+
+  @@unique([studentId])
+}
+
+// Agregar modelo notas (materia, estudiante la nota @db.Decimal(p, s)) -- restriccion = un estudiante solamente puede tener una nota por materia
+
+// https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#decimal

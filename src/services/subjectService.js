@@ -1,7 +1,6 @@
 const prisma = require('../prisma/client');
 const debug = require('debug');
 
-
 //logger
 const logger = debug('class-api:subjects');
 
@@ -14,7 +13,7 @@ class SubjectService {
 
   static findSubjectById = async (id) => {
     const listSubjects = await prisma.subjects.findUnique({
-      where:{
+      where: {
         id,
       },
     });
@@ -29,7 +28,7 @@ class SubjectService {
     return 'Se ha creado la materia';
   };
 
-  static editSubject = async (id,subject) => {
+  static editSubject = async (id, subject) => {
     logger('actualizando la materia con id %s', id);
     await prisma.subjects.update({
       where: {
@@ -40,19 +39,20 @@ class SubjectService {
     return 'Se ha editado la materia';
   };
 
-
   static deleteSubject = async (id) => {
-      logger('eliminando materia con id %s', id);
-      await prisma.subjects.update({
-        where: {
-          id,
-        },
-        data: {
-          deleted: true,
-        },  
-      });
-      return 'Se ha eliminado la materia';
+    logger('eliminando materia con id %s', id);
+    await prisma.subjects.update({
+      where: {
+        id,
+      },
+      data: {
+        deleted: true,
+      },
+    });
+    return 'Se ha eliminado la materia';
   };
+
+  // Listar las materias por profesor (id)
 }
 
 module.exports = SubjectService;

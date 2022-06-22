@@ -2,6 +2,7 @@ const express = require('express');
 const debug = require('debug');
 const morgan = require('morgan');
 // Controllers
+const courseController = require('./controllers/courseController');
 const studentController = require('./controllers/studentController');
 const teacherController = require('./controllers/teacherController');
 const subjectController = require('./controllers/subjectController');
@@ -20,8 +21,9 @@ app.get('/', (request, response) => {
   response.send('hola mundo');
 });
 
-app.use(studentController);
-app.use(teacherController);
-app.use(subjectController);
+app.use('/courses', courseController);
+app.use('/students', studentController);
+app.use('/teachers', teacherController);
+app.use('/subjects', subjectController);
 
 module.exports = app;
