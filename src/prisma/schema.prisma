@@ -12,9 +12,28 @@ model Students {
   names      String   @db.VarChar(30)
   last_names String   @db.VarChar(30)
   code       String   @db.VarChar(10)
+  grade      Int      @db.Int
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
-  grade      Int
   status     Boolean  @default(true)
   deleted    Boolean  @default(false)
+}
+
+model Teachers {
+  id         Int      @id @default(autoincrement())
+  names      String   @db.VarChar(30)
+  last_names String   @db.VarChar(30)
+  subject    String   @db.VarChar(30)
+  grade      Int      @db.Int //Puede ser un JSON
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+  status     Boolean  @default(true)
+  deleted    Boolean  @default(false)
+}
+
+model Subjects {
+  id      Int     @id @default(autoincrement())
+  name    String  @db.VarChar(30)
+  teacher String  @db.VarChar(30)
+  deleted Boolean @default(false)
 }

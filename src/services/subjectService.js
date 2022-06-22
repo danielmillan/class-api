@@ -1,46 +1,57 @@
+const prisma = require('../prisma/client');
 const debug = require('debug');
-const subjects = [];
+
 
 //logger
 const logger = debug('class-api:subjects');
 
 class SubjectService {
-  static listaMaterias = () => {
+  static listSubjects = async () => {
     logger('Se ha enviado el listado de materias');
-    return subjects;
+    const listSubjects = await prisma.subjects.findMany();
+    return listSubjects;
   };
 
-  static crearMaterias = (materia) => {
-    subjects.push(materia);
-    logger('Se ha creado al materia ', materia);
+  static findSubjectById = async (id) => {
+    const listSubjects = await prisma.subjects.findUnique({
+      where:{
+        id,
+      },
+    });
+    return listSubjects;
+  };
+
+  static createSubjects = async (subject) => {
+    logger('Creando la materia %s', subject.name);
+    await prisma.subjects.create({
+      data: subject,
+    });
     return 'Se ha creado la materia';
   };
 
-  static editarMateria = (materia) => {
-    const indexOfMateria = subjects.indexOf(
-      subjects.find((mate) => mate.id === materia.id)
-    );
-
-    if (indexOfMateria >= 0) {
-      subjects[indexOfMateria] = materia;
-      logger('Se ha editado la materia', subjects[indexOfMateria].nombre);
-      return 'Se ha editado la materia';
-    } else {
-      return 'No se ha encontrado la materia';
-    }
+  static editSubject = async (id,subject) => {
+    logger('actualizando la materia con id %s', id);
+    await prisma.subjects.update({
+      where: {
+        id,
+      },
+      data: subject,
+    });
+    return 'Se ha editado la materia';
   };
 
-  static eliminarMateria = (id) => {
-    const indexOfMateria = subjects.indexOf(
-      subjects.find((mate) => mate.id === id)
-    );
 
-    if (indexOfMateria >= 0) {
-      subjects.splice(indexOfMateria, 1);
+  static deleteSubject = async (id) => {
+      logger('eliminando materia con id %s', id);
+      await prisma.subjects.update({
+        where: {
+          id,
+        },
+        data: {
+          deleted: true,
+        },  
+      });
       return 'Se ha eliminado la materia';
-    } else {
-      return 'No se ha encontrado la materia';
-    }
   };
 }
 

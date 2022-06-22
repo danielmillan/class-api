@@ -1,47 +1,60 @@
 const debug = require('debug');
-
-const docentes = [];
+const prisma = require('../prisma/client');
 
 //logger
 const logger = debug('class-api:teachers');
 
 class TeacherService {
-  static listaDocentes = (docentes) => {
-    logger('Se ha enviado el listado de docentes');
-    return docentes;
+  static listTeachers = async () => {
+    logger('Obteniendo listado de docentes');
+    const listTeachers = await prisma.teachers.findMany({
+      where: {
+        deleted: false,
+      },
+    });
+    return listTeachers;
   };
 
-  static crearDocente = (docente) => {
-    docentes.push(docente);
-    logger('Se ha agregado el docente', docente);
+  static findTeacherById = async (id) => {
+    logger('Obteniendo listado de docentes');
+    const listTeachers = await prisma.teachers.findUnique({
+      where: {
+        id,
+      },
+    });
+    return listTeachers;
+  };
+
+  static createTeacher = async (teacher) => {
+    logger('Se ha agregado el docente %s', teacher.names);
+    await prisma.teachers.create({
+      data: teacher,
+    });
     return 'Se ha creado el docente';
   };
 
-  static editarDocente = (docente) => {
-    const indexOfDocente = docentes.indexOf(
-      docentes.find((don) => don.id === docente.id)
-    );
-    if (indexOfDocente >= 0) {
-      docentes[indexOfDocente] = docente;
-      logger('Se ha editado el docente', docente);
-      return 'El docente se ha actualizado';
-    } else {
-      return 'No se ha encontrado el docente';
-    }
+  static editTeacher = async (id, teacher) => {
+    logger('actualizando el docente con id %s', id);
+    await prisma.teachers.update({
+      where: {
+        id,
+      },
+      data: teacher,
+    });
+    return 'Se ha editado el docente';
   };
 
-  static eliminarDocente = (id) => {
-    const indexOfDocente = docentes.indexOf(
-      docentes.find((don) => don.id === id)
-    );
-    logger(indexOfDocente);
-    if (indexOfDocente >= 0) {
-      docentes.splice(indexOfDocente, 1);
-      logger('Se ha eliminado el docente');
-      return 'El docente se ha eliminado';
-    } else {
-      return 'No se ha encontrado el docente';
-    }
+  static deleteTeacher = async (id) => {
+    logger('eliminando el docente con id %s', id);
+    await prisma.teachers.update({
+      where: {
+        id,
+      },
+      data: {
+        deleted: true,
+      },
+    });
+    return 'Se ha eliminado el docente';
   };
 }
 

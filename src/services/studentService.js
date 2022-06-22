@@ -5,7 +5,7 @@ const prisma = require('../prisma/client');
 const logger = debug('class-api:students');
 
 class StudentService {
-  static listaEstudiantes = async () => {
+  static listStudents = async () => {
     logger('Obteniendo listado de estudiantes');
     const listStudents = await prisma.students.findMany({
       where: {
@@ -15,7 +15,7 @@ class StudentService {
     return listStudents;
   };
 
-  static buscarEstudiantePorId = async (id) => {
+  static findStudentById = async (id) => {
     logger('Obteniendo listado de estudiantes');
     const listStudents = await prisma.students.findUnique({
       where: {
@@ -25,26 +25,26 @@ class StudentService {
     return listStudents;
   };
 
-  static crearEstudiante = async (estudiante) => {
-    logger('Creando el estudiante %s', estudiante.names);
+  static createStudent = async (student) => {
+    logger('Creando el estudiante %s', student.names);
     await prisma.students.create({
-      data: estudiante,
+      data: student,
     });
     return 'Se ha creado el estudiante';
   };
 
-  static editarEstudiante = async (id, estudiante) => {
+  static editStudent = async (id, student) => {
     logger('actualizando el estudiante con id %s', id);
     await prisma.students.update({
       where: {
         id,
       },
-      data: estudiante,
+      data: student,
     });
     return 'Se ha editado el estudiante';
   };
 
-  static eliminarEstudiante = async (id) => {
+  static deleteStudent = async (id) => {
     logger('eliminando el estudiante con id %s', id);
     await prisma.students.update({
       where: {
