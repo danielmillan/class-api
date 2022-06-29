@@ -27,4 +27,5 @@ app.use('/students', studentController);
 app.use('/teachers', teacherController);
 app.use('/subjects', subjectController);
 app.use('/notes', notesController);
+
 module.exports = app;

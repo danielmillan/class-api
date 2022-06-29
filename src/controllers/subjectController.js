@@ -1,4 +1,3 @@
-const { prisma } = require('@prisma/client');
 const { Router } = require('express');
 const SubjectService = require('../services/subjectService');
 
@@ -43,10 +42,9 @@ subjectController.delete('/:id', async (request, response) => {
 });
 
 subjectController.get('/teacher/:id', async (request, response) => {
-const teacherId = Number(request.params.id);
-const resultService = await SubjectService.getSubjectsByTeacher(teacherId);
-response.send(resultService);
+  const teacherId = Number(request.params.id);
+  const resultService = await SubjectService.getSubjectsByTeacher(teacherId);
+  response.send(resultService);
 });
-
 
 module.exports = subjectController;
