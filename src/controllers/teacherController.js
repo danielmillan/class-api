@@ -43,4 +43,14 @@ teacherController.delete('/:id', async (request, response) => {
   response.send(resultService);
 });
 
+teacherController.post('/subject/register', async (request, response)=>{
+  const register = {
+    teacherId: request.body.teacherId,
+    subjectId: request.body.subjectId
+  };
+  const resultService = await TeacherService.addTeacherInASubject(register);
+  response.send(resultService);
+  });
+
+
 module.exports = teacherController;

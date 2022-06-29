@@ -18,6 +18,7 @@ model Students {
   deleted               Boolean                 @default(false)
   Students_from_Courses Students_from_Courses[]
 
+  Subject_Note_for_Student Subject_Note_for_Student[]
   @@unique([code])
 }
 
@@ -34,11 +35,12 @@ model Teachers {
 }
 
 model Subjects {
-  id                      Int                       @id @default(autoincrement())
-  name                    String                    @db.VarChar(30)
-  status                  Boolean                   @default(true)
-  deleted                 Boolean                   @default(false)
-  Subjects__from_Teachers Subjects__from_Teachers[]
+  id                       Int                        @id @default(autoincrement())
+  name                     String                     @db.VarChar(30)
+  status                   Boolean                    @default(true)
+  deleted                  Boolean                    @default(false)
+  Subjects__from_Teachers  Subjects__from_Teachers[]
+  Subject_Note_for_Student Subject_Note_for_Student[]
 }
 
 model Subjects__from_Teachers {
@@ -81,6 +83,17 @@ model Students_from_Courses {
   @@unique([studentId])
 }
 
-// Agregar modelo notas (materia, estudiante la nota @db.Decimal(p, s)) -- restriccion = un estudiante solamente puede tener una nota por materia
+// Agregar modelo notas (materia, estudiante, la nota @db.Decimal(p, s)) -- restriccion = un estudiante solamente puede tener una nota por materia
 
 // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#decimal
+
+model Subject_Note_for_Student {
+  id        Int      @id @default(autoincrement())
+  Student   Students @relation(fields: [studentId], references: [id])
+  studentId Int
+  Subject   Subjects @relation(fields: [subjectId], references: [id])
+  subjectId Int
+  Note      Decimal  @db.Decimal()
+
+  @@unique([studentId, subjectId, Note])
+}

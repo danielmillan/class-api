@@ -53,6 +53,30 @@ class SubjectService {
   };
 
   // Listar las materias por profesor (id)
+
+  static getSubjectsByTeacher = async (teacherId) => {
+    logger('Enviando Listado de materias por docente %s', teacherId);
+    const getSubjectsByTeacher = await prisma.subjects__from_Teachers.findMany({
+      where:{
+        teacherId,
+      },
+      select:{
+        teacher:{
+          select:{
+            names: true,
+            last_names: true,
+          }
+        },
+        subject:{
+          select:{
+            name: true,
+          }
+          
+        },
+      }
+    });
+    return getSubjectsByTeacher;
+  };
 }
 
 module.exports = SubjectService;

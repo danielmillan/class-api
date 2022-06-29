@@ -6,6 +6,7 @@ const courseController = require('./controllers/courseController');
 const studentController = require('./controllers/studentController');
 const teacherController = require('./controllers/teacherController');
 const subjectController = require('./controllers/subjectController');
+const notesController = require('./controllers/notesController');
 
 //logger
 const logger = debug('class-api:app');
@@ -25,5 +26,5 @@ app.use('/courses', courseController);
 app.use('/students', studentController);
 app.use('/teachers', teacherController);
 app.use('/subjects', subjectController);
-
+app.use('/notes', notesController);
 module.exports = app;

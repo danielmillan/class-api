@@ -58,6 +58,13 @@ class TeacherService {
   };
 
   // Agregar un profesor a una materia
+  static addTeacherInASubject = async (register) => {
+    logger('Agregando el docente %d a la materia %d:', register.teacherId, register.subjectId);
+    await prisma.subjects__from_Teachers.create({
+      data: register,
+    });
+    return 'El docente se ha agregado a la Materia';
+  };
 }
 
 module.exports = TeacherService;
