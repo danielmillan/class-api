@@ -89,7 +89,7 @@ model Subject_Note_for_Student {
   studentId Int
   Subject   Subjects @relation(fields: [subjectId], references: [id])
   subjectId Int
-  note      Decimal  @db.Decimal(9,2)
+  note      Decimal  @db.Decimal(9, 2)
 
   @@unique([studentId, subjectId, note])
 }
