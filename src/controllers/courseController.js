@@ -35,5 +35,4 @@ courseController.put('/:id', async (request, response) => {
   response.send(resultService);
 });
 
-
 module.exports = courseController;

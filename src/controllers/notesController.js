@@ -75,7 +75,7 @@ notesController.get('/teacher/:id', async (request, response) => {
   response.send(resultService);
 });
 
-notesController.get('/subject-student/:id', async (request, response) => {
+notesController.get('/subject-student', async (request, response) => {
   const studentId = Number(request.params.id);
   const subjectId = Number(request.query.subjectId);
   const resultService = await NotesService.getNotesBySubjectAndStudent(

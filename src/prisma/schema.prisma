@@ -93,3 +93,22 @@ model Subject_Note_for_Student {
 
   @@unique([studentId, subjectId, note])
 }
+
+model User {
+  id         Int      @id @default(autoincrement())
+  names      String   @db.VarChar(30)
+  last_names String   @db.VarChar(30)
+  email      String   @db.VarChar(200)
+  password   String   @db.VarChar(200)
+  // rol
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+  status     Boolean  @default(true)
+  deleted    Boolean  @default(false)
+
+  @@unique([email])
+}
+
+// Modelo Roles - name, status, deleted
+
+// Modificar User para asignar un Rol
