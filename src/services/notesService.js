@@ -1,13 +1,13 @@
-const { Prisma } = require("@prisma/client");
-const debug = require("debug");
-const prisma = require("../prisma/client");
+const { Prisma } = require('@prisma/client');
+const debug = require('debug');
+const prisma = require('../prisma/client');
 
 //logger
-const logger = debug("class-api:notesService");
+const logger = debug('class-api:notesService');
 
 class notesService {
   static addNote = async (note) => {
-    logger("Agregando nota: %j", note);
+    logger('Agregando nota: %j', note);
     await prisma.subject_Note_for_Student.create({
       data: {
         studentId: note.studentId,
@@ -15,11 +15,11 @@ class notesService {
         note: new Prisma.Decimal(note.note),
       },
     });
-    return "Se ha agregado la nota al estudiante";
+    return 'Se ha agregado la nota al estudiante';
   };
 
   static editNote = async (id, Note) => {
-    logger("Editando nota del estudiante");
+    logger('Editando nota del estudiante');
     await prisma.subject_Note_for_Student.update({
       where: {
         id,
@@ -28,7 +28,7 @@ class notesService {
         Note,
       },
     });
-    return "Se ha editado la nota al estudiante";
+    return 'Se ha editado la nota al estudiante';
   };
 
   static listNotes = async () => {
@@ -37,7 +37,7 @@ class notesService {
   };
 
   static listNotesByStudent = async (studentId) => {
-    logger("Enviando Listado de notas por estudiante");
+    logger('Enviando Listado de notas por estudiante');
     const listNotesByStudent = await prisma.subject_Note_for_Student.findMany({
       where: {
         studentId,
@@ -62,7 +62,7 @@ class notesService {
   };
 
   static listNotesByCourseAndSubject = async (courseNumber, subjectId) => {
-    logger("Enviando Listado de notas por curso-materia");
+    logger('Enviando Listado de notas por curso-materia');
     const listNotesByStudent = await prisma.subject_Note_for_Student.findMany({
       where: {
         subjectId,
@@ -112,9 +112,8 @@ class notesService {
     return listNotesFormat;
   };
 
-  // filtrar las notas por grado -> route /notes/grade/:id
   static listNotesByGrade = async (gradeId) => {
-    logger("enviando listado de Notas por Grado");
+    logger('enviando listado de Notas por Grado');
     const listNotesByGrade = await prisma.subject_Note_for_Student.findMany({
       where: {
         Student: {
@@ -156,7 +155,6 @@ class notesService {
         note: true,
       },
     });
-
     const notesBygradeFormat = listNotesByGrade.map((notesBygrade) => {
       return {
         student: `${notesBygrade.Student.names} ${notesBygrade.Student.last_names}`,
@@ -171,9 +169,9 @@ class notesService {
     });
     return notesBygradeFormat;
   };
-  // filtrar las notas por materia -> route /notes/subject/:id
+
   static getNoteBySubject = async (subjectId) => {
-    logger("enviando listado de Notas por Materia");
+    logger('enviando listado de Notas por Materia');
     const getNoteBySubject = await prisma.subject_Note_for_Student.findMany({
       where: {
         subjectId,
@@ -210,9 +208,9 @@ class notesService {
     });
     return getNoteBySubjectFormat;
   };
-  // filtrar las notas por materia y grado -> route /notes/subject-grade/:id?grade=6
+
   static getNoteBySubjectAndGrade = async (subjectId, gradeId) => {
-    logger("Enviando listado de Notas por Materia y Grado");
+    logger('Enviando listado de Notas por Materia y Grado');
     const getNoteBySubjectAndGrade =
       await prisma.subject_Note_for_Student.findMany({
         where: {
@@ -271,18 +269,14 @@ class notesService {
     return getNoteBySubjectAndGradeFormat;
   };
 
-  // TIENE ERRROR!!
-  // filtrar las notas por profesor = -> route /notes/teacher/:id
-  static getNotesByTeacher = async (teacherManager) => {
-    logger("Enviando listado de Notas por docente");
+  static getNotesByTeacher = async (teacherId) => {
+    logger('Enviando listado de Notas por docente');
     const getNoteByTeacher = await prisma.subject_Note_for_Student.findMany({
       where: {
-        Student: {
-          Students_from_Courses: {
+        Subject: {
+          Subjects__from_Teachers: {
             every: {
-              course: {
-                teacherManager,
-              },
+              teacherId,
             },
           },
         },
@@ -325,13 +319,22 @@ class notesService {
         note: true,
       },
     });
-    return getNoteByTeacher;
+    //return getNoteByTeacher;
+    const getNoteByTeacherFormat = getNoteByTeacher.map((noteByTeacher) => {
+      return {
+        teacher:
+          `${noteByTeacher.Subject.Subjects__from_Teachers[0].teacher.names} ` +
+          `${noteByTeacher.Subject.Subjects__from_Teachers[0].teacher.last_names}`,
+        subject: noteByTeacher.Subject.name,
+        student: `${noteByTeacher.Student.names} ${noteByTeacher.Student.last_names}`,
+        note: noteByTeacher.note,
+      };
+    });
+    return getNoteByTeacherFormat;
   };
 
-  // filtrar las notas por materia y estudiante -> route /notes/subject-student/:id?subjectId=2
-
   static getNotesBySubjectAndStudent = async (studentId, subjectId) => {
-    logger("Enviando listado de notas por materia y estudiante");
+    logger('Enviando listado de notas por materia y estudiante');
     const getNotesBySubjectAndStudent =
       await prisma.subject_Note_for_Student.findMany({
         where: {
@@ -361,46 +364,66 @@ class notesService {
           subject: noteByStudentAndGrade.Subject.name,
           note: noteByStudentAndGrade.note,
         };
-      },
+      }
     );
     return getNotesBySubjectAndStudentFormat;
   };
 
-  /**
-   * (opcional) https://www.prisma.io/docs/concepts/components/prisma-client/aggregation-grouping-summarizing
-   *
-   * route /notes/average/subject-course?subjectId=2&courseId=1
-   *
-   * promedio de una materia por curso
-   *
-   * ejemplo:
-   * {
-   *  subject: "Matematicas",
-   *  course: "601",
-   *  average: 2.5
-   * }
-   */
-
   static averageNoteforSubejectCourse = async (subjectId, courseId) => {
-    logger("Se ha enviado el promedio de nota de una materia por curso");
+    logger('Se ha enviado el promedio de nota de una materia por curso');
     const averageNote = await prisma.subject_Note_for_Student.aggregate({
       _avg: {
         note: true,
       },
       where: {
         subjectId,
-        
         Student: {
-          
           Students_from_Courses: {
-            every:{
-            courseId,
+            every: {
+              courseId,
+            },
           },
-        },
         },
       },
     });
-    return averageNote;
+    const subjectCourseData = await prisma.subject_Note_for_Student.findFirst({
+      where: {
+        Student: {
+          Students_from_Courses: {
+            every: {
+              courseId,
+            },
+          },
+        },
+        subjectId,
+      },
+      select: {
+        Subject: {
+          select: {
+            name: true,
+          },
+        },
+        Student: {
+          select: {
+            Students_from_Courses: {
+              select: {
+                course: {
+                  select: {
+                    courseNumber: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+    return {
+      subject: subjectCourseData.Subject.name,
+      course:
+        subjectCourseData.Student.Students_from_Courses[0].course.courseNumber,
+      note: averageNote._avg.note,
+    };
   };
 }
 
