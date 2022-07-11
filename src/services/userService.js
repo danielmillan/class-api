@@ -15,6 +15,11 @@ class UserService {
         id: true,
         names: true,
         last_names: true,
+        Role:{
+          select:{
+            name:true,
+          },
+        },
         email: true,
         created_at: true,
         updated_at: true,
@@ -34,6 +39,11 @@ class UserService {
         id: true,
         names: true,
         last_names: true,
+        Role:{
+          select:{
+            name:true,
+          },
+        },
         email: true,
         created_at: true,
         updated_at: true,

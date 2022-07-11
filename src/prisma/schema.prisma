@@ -101,6 +101,8 @@ model User {
   email      String   @db.VarChar(200)
   password   String   @db.VarChar(200)
   // rol
+  Role       Roles    @relation(fields: [roleId], references: [id])
+  roleId     Int
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
   status     Boolean  @default(true)
@@ -110,5 +112,13 @@ model User {
 }
 
 // Modelo Roles - name, status, deleted
+
+model Roles {
+  id      Int     @id @default(autoincrement())
+  name    String  @db.VarChar(30)
+  status  Boolean @default(true)
+  deleted Boolean @default(false)
+  User    User[]
+}
 
 // Modificar User para asignar un Rol

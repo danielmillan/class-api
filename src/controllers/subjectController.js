@@ -1,5 +1,6 @@
 const { Router } = require('express');
 const SubjectService = require('../services/subjectService');
+const RoleMiddlewares = require('../middlewares/role')
 
 const subjectController = Router();
 
@@ -14,7 +15,7 @@ subjectController.get('/:id', async (request, response) => {
   response.send(resultService);
 });
 
-subjectController.post('/', async (request, response) => {
+subjectController.post('/', RoleMiddlewares.validRole, async (request, response) => {
   const subject = {
     name: request.body.name,
     teacher: request.body.teacher,
@@ -24,7 +25,7 @@ subjectController.post('/', async (request, response) => {
   response.send(resultService);
 });
 
-subjectController.put('/:id', async (request, response) => {
+subjectController.put('/:id', RoleMiddlewares.validRole, async (request, response) => {
   const subject = {
     name: request.body.name,
     teacher: request.body.teacher,
@@ -35,7 +36,7 @@ subjectController.put('/:id', async (request, response) => {
   response.send(resultService);
 });
 
-subjectController.delete('/:id', async (request, response) => {
+subjectController.delete('/:id', RoleMiddlewares.validRole, async (request, response) => {
   const subjectId = Number(request.params.id);
   const resultService = await SubjectService.deleteSubject(subjectId);
   response.send(resultService);

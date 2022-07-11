@@ -1,9 +1,10 @@
 const { Router, request } = require('express');
 const NotesService = require('../services/notesService');
+const RoleMiddlewares = require('../middlewares/role')
 
 const notesController = Router();
 
-notesController.post('/', async (request, response) => {
+notesController.post('/', RoleMiddlewares.validRole, async (request, response) => {
   const note = {
     studentId: Number(request.body.studentId),
     subjectId: Number(request.body.subjectId),
@@ -19,7 +20,7 @@ notesController.get('/', async (request, response) => {
   response.send(resultService);
 });
 
-notesController.put('/:id', async (request, response) => {
+notesController.put('/:id', RoleMiddlewares.validRole, async (request, response) => {
   const studentNote = {
     id: Number(request.params.id),
     note: Number(request.body.note),

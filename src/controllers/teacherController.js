@@ -1,5 +1,6 @@
 const { Router } = require('express');
 const TeacherService = require('../services/teacherService');
+const RoleMiddlewares = require('../middlewares/role')
 
 const teacherController = Router();
 
@@ -14,7 +15,7 @@ teacherController.get('/:id', async (request, response) => {
   response.send(resultService);
 });
 
-teacherController.post('/', async (request, response) => {
+teacherController.post('/', RoleMiddlewares.validRole, async (request, response) => {
   const teacher = {
     names: request.body.names,
     last_names: request.body.last_names,
@@ -25,7 +26,7 @@ teacherController.post('/', async (request, response) => {
   response.send(resultService);
 });
 
-teacherController.put('/:id', async (request, response) => {
+teacherController.put('/:id', RoleMiddlewares.validRole, async (request, response) => {
   const teacher = {
     names: request.body.names,
     last_names: request.body.last_names,
@@ -37,7 +38,7 @@ teacherController.put('/:id', async (request, response) => {
   response.send(resultService);
 });
 
-teacherController.delete('/:id', async (request, response) => {
+teacherController.delete('/:id', RoleMiddlewares.validRole, async (request, response) => {
   const teacherId = Number(request.params.id);
   const resultService = await TeacherService.deleteTeacher(teacherId);
   response.send(resultService);
