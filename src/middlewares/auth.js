@@ -3,8 +3,9 @@ const debug = require('debug');
 
 //logger
 const logger = debug('class-api:AuthMiddlewares');
-
+let roleVal = 0;
 class AuthMiddlewares {
+  
   static validToken(request, response, next) {
     const authorizationHeader = request.headers.authorization;
     if (authorizationHeader) {
@@ -18,14 +19,18 @@ class AuthMiddlewares {
             response.status(401).send('No tiene permisos para esta acción');
           } else {
             response.locals.user = decodedData;
+            //roleVal = response.locals.user.roleId;
+            //console.log(roleVal)
+           //console.log(response.locals.user.roleId);
             next();
           }
         }
       );
     } else {
-      response.status(401).send('No tiene permisos para esta acción');
+      response.status(401).send('No tiene permisos para esta acción,Paila');
     }
   }
 }
 
 module.exports = AuthMiddlewares;
+

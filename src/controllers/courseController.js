@@ -1,5 +1,6 @@
 const { Router } = require('express');
 const CourseService = require('../services/courseService');
+const RoleMiddlewares = require('../middlewares/role')
 
 const courseController = Router();
 
@@ -9,7 +10,7 @@ courseController.get('/students/:id', async (request, response) => {
   response.send(resultService);
 });
 
-courseController.post('/register', async (request, response) => {
+courseController.post('/register', RoleMiddlewares.validRole, async (request, response) => {
   const course = {
     courseNumber: Number(request.body.courseNumber),
     gradeId: request.body.gradeId,
@@ -24,7 +25,7 @@ courseController.get('/', async (request, response) => {
   response.send(resultService);
 });
 
-courseController.put('/:id', async (request, response) => {
+courseController.put('/:id', RoleMiddlewares.validRole, async (request, response) => {
   const id = Number(request.params.id);
   const course = {
     courseNumber: Number(request.body.courseNumber),

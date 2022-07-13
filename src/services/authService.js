@@ -18,9 +18,10 @@ class AuthService {
           id: userMatch.id,
           names: userMatch.names,
           last_names: userMatch.last_names,
+          roleId: userMatch.roleId,
           email: userMatch.email,
         };
-        const token = AuthUtilities.signToken(payload, '5m');
+        const token = AuthUtilities.signToken(payload, '20m');
         return token;
       } else {
         ('Credenciales incorrectas');

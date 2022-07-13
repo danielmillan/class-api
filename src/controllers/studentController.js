@@ -1,5 +1,6 @@
 const { Router } = require('express');
 const StudentService = require('../services/studentService');
+const RoleMiddlewares = require('../middlewares/role')
 
 const studentController = Router();
 
@@ -14,7 +15,7 @@ studentController.get('/:id', async (request, response) => {
   response.send(resultService);
 });
 
-studentController.post('/', async (request, response) => {
+studentController.post('/', RoleMiddlewares.validRole, async (request, response) => {
   const student = {
     names: request.body.names,
     last_names: request.body.last_names,
@@ -25,7 +26,7 @@ studentController.post('/', async (request, response) => {
   response.send(resultService);
 });
 
-studentController.put('/:id', async (request, response) => {
+studentController.put('/:id', RoleMiddlewares.validRole, async (request, response) => {
   const student = {
     names: request.body.names,
     last_names: request.body.last_names,
@@ -37,13 +38,13 @@ studentController.put('/:id', async (request, response) => {
   response.send(resultService);
 });
 
-studentController.delete('/:id', async (request, response) => {
+studentController.delete('/:id', RoleMiddlewares.validRole, async (request, response) => {
   const studentId = Number(request.params.id);
   const resultService = await StudentService.deleteStudent(studentId);
   response.send(resultService);
 });
 
-studentController.post('/courses/register', async (request, response) => {
+studentController.post('/courses/register', RoleMiddlewares.validRole, async (request, response) => {
   const register = {
     studentId: Number(request.body.studentId),
     courseId: Number(request.body.courseId),
