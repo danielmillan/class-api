@@ -10,7 +10,6 @@ const subjectController = require('./controllers/subjectController');
 const notesController = require('./controllers/notesController');
 const userController = require('./controllers/userController');
 const AuthMiddlewares = require('./middlewares/auth');
-const RoleMiddlewares = require('./middlewares/role');
 
 //logger
 const logger = debug('class-api:app');
