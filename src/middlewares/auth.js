@@ -3,9 +3,8 @@ const debug = require('debug');
 
 //logger
 const logger = debug('class-api:AuthMiddlewares');
-let roleVal = 0;
+
 class AuthMiddlewares {
-  
   static validToken(request, response, next) {
     const authorizationHeader = request.headers.authorization;
     if (authorizationHeader) {
@@ -18,10 +17,8 @@ class AuthMiddlewares {
             logger('jwt failed, a reason is: %s', err.message);
             response.status(401).send('No tiene permisos para esta acción');
           } else {
+            logger('decoded Token: %j', decodedData);
             response.locals.user = decodedData;
-            //roleVal = response.locals.user.roleId;
-            //console.log(roleVal)
-           //console.log(response.locals.user.roleId);
             next();
           }
         }
@@ -33,4 +30,3 @@ class AuthMiddlewares {
 }
 
 module.exports = AuthMiddlewares;
-

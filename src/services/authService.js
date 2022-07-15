@@ -11,6 +11,18 @@ class AuthService {
       where: {
         email,
       },
+      select: {
+        id: true,
+        names: true,
+        last_names: true,
+        email: true,
+        password: true,
+        Role: {
+          select: {
+            name: true,
+          },
+        },
+      },
     });
     if (userMatch) {
       if (await AuthUtilities.compareHash(password, userMatch.password)) {
@@ -18,7 +30,7 @@ class AuthService {
           id: userMatch.id,
           names: userMatch.names,
           last_names: userMatch.last_names,
-          roleId: userMatch.roleId,
+          role: userMatch.Role.name,
           email: userMatch.email,
         };
         const token = AuthUtilities.signToken(payload, '20m');

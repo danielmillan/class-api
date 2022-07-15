@@ -70,12 +70,17 @@ VALUES (1, 1, 1, 3.50),
   (5, 3, 1, 2.00);
 INSERT INTO `Subjects__from_Teachers`
 VALUES (1, 1, 1);
+INSERT INTO `classes`.`Roles` (`name`)
+VALUES ('ADMIN');
+INSERT INTO `classes`.`Roles` (`name`)
+VALUES ('TEACHER');
 INSERT INTO `classes`.`User` (
     `id`,
     `names`,
     `last_names`,
     `email`,
     `password`,
+    `roleId`,
     `created_at`,
     `updated_at`,
     `status`,
@@ -87,6 +92,7 @@ VALUES (
     "Quintero",
     "cquintero@gmail.com",
     "$2b$10$BlHkBYEoBfoAgEgHV/f7s.p8KHBtlaqoBsvAgowh00xJDza9nR9.W",
+    1,
     "2022-07-06 03:33:26.503",
     "2022-07-06 03:33:26.503",
     1,
@@ -98,6 +104,7 @@ VALUES (
     "Millam",
     "dani.millan07@gmail.com",
     "$2b$10$vaan4r3w4Ur3dRTPGSxPcOGDqy2J7CgaRuQjFZA1cS0/aX5ZJk/K6",
+    1,
     "2022-07-06 03:34:46.475",
     "2022-07-06 03:34:46.474",
     1,
