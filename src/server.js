@@ -4,7 +4,7 @@ const app = require('./app');
 
 //logger
 const logger = debug('class-api:server');
-const port = 8090;
+const port = process.env.PORT;
 
 app.set('port', port);
 const server = http.createServer(app);
