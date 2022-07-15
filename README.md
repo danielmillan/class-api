@@ -1,2 +1,3 @@
 # class-api
-Ejercicio servicios API para un salon de clases
+
+Servicios API para un salon de clases
