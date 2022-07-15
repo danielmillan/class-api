@@ -1,40 +1,72 @@
 const { Router } = require('express');
 const TeacherService = require('../services/teacherService');
+const RoleMiddlewares = require('../middlewares/role');
 
 const teacherController = Router();
 
-teacherController.get('/teachers', (request, response) => {
-  response.send(TeacherService.listaDocentes(teachers.docentes));
+teacherController.get('/', async (request, response) => {
+  const resultService = await TeacherService.listTeachers();
+  response.send(resultService);
 });
 
-teacherController.post('/teachers', (request, response) => {
-  const docente = {
-    id: Math.floor(Math.random() * 99 + 1),
-    nombre: request.body.nombre,
-    edad: request.body.edad,
-    materia: request.body.materia,
-    cursos: request.body.cursos,
-    tcPlanta: request.body.tcPlanta,
-  };
-  response.send(TeacherService.crearDocente(docente));
+teacherController.get('/:id', async (request, response) => {
+  const teacherId = Number(request.params.id);
+  const resultService = await TeacherService.findTeacherById(teacherId);
+  response.send(resultService);
 });
 
-teacherController.put('/teachers/:id', (request, response) => {
-  const docente = {
-    id: Number(request.params.id),
-    nombre: request.body.nombre,
-    edad: request.body.edad,
-    materia: request.body.materia,
-    cursos: request.body.cursos,
-    tcPlanta: request.body.tcPlanta,
-  };
-  //logger('se ha recibido el docente', docente);
-  response.send(TeacherService.editarDocente(docente));
-});
+teacherController.post(
+  '/',
+  RoleMiddlewares.validRole,
+  async (request, response) => {
+    const teacher = {
+      names: request.body.names,
+      last_names: request.body.last_names,
+      subject: request.body.subject,
+      grade: request.body.grade,
+    };
+    const resultService = await TeacherService.createTeacher(teacher);
+    response.send(resultService);
+  }
+);
 
-teacherController.delete('/teachers/:id', (request, response) => {
-  const id = Number(request.params.id);
-  response.send(TeacherService.eliminarDocente(id));
-});
+teacherController.put(
+  '/:id',
+  RoleMiddlewares.validRole,
+  async (request, response) => {
+    const teacher = {
+      names: request.body.names,
+      last_names: request.body.last_names,
+      subject: request.body.subject,
+      grade: request.body.grade,
+    };
+    const teacherId = Number(request.params.id);
+    const resultService = await TeacherService.editTeacher(teacherId, teacher);
+    response.send(resultService);
+  }
+);
+
+teacherController.delete(
+  '/:id',
+  RoleMiddlewares.validRole,
+  async (request, response) => {
+    const teacherId = Number(request.params.id);
+    const resultService = await TeacherService.deleteTeacher(teacherId);
+    response.send(resultService);
+  }
+);
+
+teacherController.post(
+  '/subject/register',
+  RoleMiddlewares.validRole,
+  async (request, response) => {
+    const register = {
+      teacherId: request.body.teacherId,
+      subjectId: request.body.subjectId,
+    };
+    const resultService = await TeacherService.addTeacherInASubject(register);
+    response.send(resultService);
+  }
+);
 
 module.exports = teacherController;

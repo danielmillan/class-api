@@ -1,46 +1,68 @@
 const debug = require('debug');
-
-const students = [];
+const prisma = require('../prisma/client');
 
 //logger
 const logger = debug('class-api:students');
 
 class StudentService {
-  static listaEstudiantes = (students) => {
-    logger('Se ha enviado el listado de estudiantes');
-    return students;
+  static listStudents = async () => {
+    logger('Obteniendo listado de estudiantes');
+    const listStudents = await prisma.students.findMany({
+      where: {
+        deleted: false,
+      },
+    });
+    return listStudents;
   };
 
-  static crearEstudiante = (estudiante) => {
-    students.push(estudiante);
-    logger('Se ha creado el estudiante', estudiante);
+  static findStudentById = async (id) => {
+    logger('Obteniendo listado de estudiantes');
+    const listStudents = await prisma.students.findUnique({
+      where: {
+        id,
+      },
+    });
+    return listStudents;
+  };
+
+  static createStudent = async (student) => {
+    logger('Creando el estudiante %s', student.names);
+    await prisma.students.create({
+      data: student,
+    });
     return 'Se ha creado el estudiante';
   };
 
-  static editarEstudiante = (estudiante) => {
-    const indexOfStudent = students.indexOf(
-      students.find((stud) => stud.id === estudiante.id)
-    );
-    if (indexOfStudent >= 0) {
-      students[indexOfStudent] = estudiante;
-      logger('Se ha editado el estduiante', students[indexOfStudent].nombre);
-      return 'Se ha editado el estudiante';
-    } else {
-      return 'No se ha encontrado el estudiante';
-    }
+  static editStudent = async (id, student) => {
+    logger('actualizando el estudiante con id %s', id);
+    await prisma.students.update({
+      where: {
+        id,
+      },
+      data: student,
+    });
+    return 'Se ha editado el estudiante';
   };
 
-  static eliminarEstudiante = (id) => {
-    const indexOfStudent = students.indexOf(
-      students.find((stud) => stud.id === id)
-    );
-    if (indexOfStudent >= 0) {
-      students.splice(indexOfStudent, 1);
-      logger('Se ha eliminado el estudiante', students[indexOfStudent].nombre);
-      return 'Se ha editado el estudiante';
-    } else {
-      return 'No se ha encontrado el estudiante';
-    }
+  static deleteStudent = async (id) => {
+    logger('eliminando el estudiante con id %s', id);
+    await prisma.students.update({
+      where: {
+        id,
+      },
+      data: {
+        deleted: true,
+      },
+    });
+    return 'Se ha eliminado el estudiante';
+  };
+
+  static registerStudentInACourse = async (studentId, courseId) => {
+    logger('registrando el estudiante %s al curso %s:', studentId, courseId);
+    await prisma.students_from_Courses.create({
+      data: { studentId, courseId },
+    });
+    return 'Estudiante matriculado al curso';
   };
 }
 

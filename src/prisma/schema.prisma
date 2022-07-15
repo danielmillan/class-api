@@ -1,0 +1,124 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Students {
+  id                    Int                     @id @default(autoincrement())
+  names                 String                  @db.VarChar(30)
+  last_names            String                  @db.VarChar(30)
+  code                  String                  @db.VarChar(10)
+  created_at            DateTime                @default(now())
+  updated_at            DateTime                @default(now())
+  status                Boolean                 @default(true)
+  deleted               Boolean                 @default(false)
+  Students_from_Courses Students_from_Courses[]
+
+  Subject_Note_for_Student Subject_Note_for_Student[]
+  @@unique([code])
+}
+
+model Teachers {
+  id                      Int                       @id @default(autoincrement())
+  names                   String                    @db.VarChar(30)
+  last_names              String                    @db.VarChar(30)
+  created_at              DateTime                  @default(now())
+  updated_at              DateTime                  @default(now())
+  status                  Boolean                   @default(true)
+  deleted                 Boolean                   @default(false)
+  Subjects__from_Teachers Subjects__from_Teachers[]
+  Courses                 Courses[]
+}
+
+model Subjects {
+  id                       Int                        @id @default(autoincrement())
+  name                     String                     @db.VarChar(30)
+  status                   Boolean                    @default(true)
+  deleted                  Boolean                    @default(false)
+  Subjects__from_Teachers  Subjects__from_Teachers[]
+  Subject_Note_for_Student Subject_Note_for_Student[]
+}
+
+model Subjects__from_Teachers {
+  id        Int      @id @default(autoincrement())
+  teacher   Teachers @relation(fields: [teacherId], references: [id])
+  teacherId Int
+  subject   Subjects @relation(fields: [subjectId], references: [id])
+  subjectId Int
+
+  @@unique([teacherId, subjectId])
+}
+
+model Grades {
+  id          Int       @id @default(autoincrement())
+  gradeNumber Int
+  alias       String
+  Courses     Courses[]
+}
+
+model Courses {
+  id             Int      @id @default(autoincrement())
+  courseNumber   Int
+  grade          Grades   @relation(fields: [gradeId], references: [id])
+  gradeId        Int
+  teacher        Teachers @relation(fields: [teacherManager], references: [id])
+  teacherManager Int
+  status         Boolean  @default(true)
+
+  Students_from_Courses Students_from_Courses[]
+  @@unique([teacherManager])
+}
+
+model Students_from_Courses {
+  id        Int      @id @default(autoincrement())
+  student   Students @relation(fields: [studentId], references: [id])
+  studentId Int
+  course    Courses  @relation(fields: [courseId], references: [id])
+  courseId  Int
+
+  @@unique([studentId])
+}
+
+model Subject_Note_for_Student {
+  id        Int      @id @default(autoincrement())
+  Student   Students @relation(fields: [studentId], references: [id])
+  studentId Int
+  Subject   Subjects @relation(fields: [subjectId], references: [id])
+  subjectId Int
+  note      Decimal  @db.Decimal(9, 2)
+
+  @@unique([studentId, subjectId, note])
+}
+
+model User {
+  id         Int      @id @default(autoincrement())
+  names      String   @db.VarChar(30)
+  last_names String   @db.VarChar(30)
+  email      String   @db.VarChar(200)
+  password   String   @db.VarChar(200)
+  // rol
+  Role       Roles    @relation(fields: [roleId], references: [id])
+  roleId     Int
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+  status     Boolean  @default(true)
+  deleted    Boolean  @default(false)
+
+  @@unique([email])
+}
+
+// Modelo Roles - name, status, deleted
+
+model Roles {
+  id      Int     @id @default(autoincrement())
+  name    String  @db.VarChar(30)
+  status  Boolean @default(true)
+  deleted Boolean @default(false)
+  User    User[]
+}
+
+// Modificar User para asignar un Rol

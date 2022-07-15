@@ -1,36 +1,51 @@
 const { Router } = require('express');
 const SubjectService = require('../services/subjectService');
+const RoleMiddlewares = require('../middlewares/role')
 
 const subjectController = Router();
 
-subjectController.get('/subjects', (request, response) => {
-  response.send(SubjectService.listaMaterias(subjects.subjects));
+subjectController.get('/', async (request, response) => {
+  const resultService = await SubjectService.listSubjects();
+  response.send(resultService);
 });
 
-subjectController.post('/subjects', (request, response) => {
-  const materia = {
-    id: Math.floor(Math.random() * 99 + 1),
-    nombre: request.body.nombre,
-    docente: request.body.docente,
-    cursos: request.body.cursos,
+subjectController.get('/:id', async (request, response) => {
+  const subjectId = Number(request.params.id);
+  const resultService = await SubjectService.findSubjectById(subjectId);
+  response.send(resultService);
+});
+
+subjectController.post('/', RoleMiddlewares.validRole, async (request, response) => {
+  const subject = {
+    name: request.body.name,
+    teacher: request.body.teacher,
   };
-  response.send(SubjectService.crearMaterias(materia));
+  const resultService = await SubjectService.createSubjects(subject);
+
+  response.send(resultService);
 });
 
-subjectController.put('/subjects/:id', (request, response) => {
-  const materia = {
-    id: Number(request.params.id),
-    nombre: request.body.nombre,
-    docente: request.body.docente,
-    cursos: request.body.cursos,
+subjectController.put('/:id', RoleMiddlewares.validRole, async (request, response) => {
+  const subject = {
+    name: request.body.name,
+    teacher: request.body.teacher,
   };
   //logger('se ha recibido el docente', docente);
-  response.send(SubjectService.editarMateria(materia));
+  const teacherId = Number(request.params.id);
+  const resultService = await SubjectService.editSubject(teacherId, subject);
+  response.send(resultService);
 });
 
-subjectController.delete('/subjects/:id', (request, response) => {
-  const id = Number(request.params.id);
-  response.send(SubjectService.eliminarMateria(id));
+subjectController.delete('/:id', RoleMiddlewares.validRole, async (request, response) => {
+  const subjectId = Number(request.params.id);
+  const resultService = await SubjectService.deleteSubject(subjectId);
+  response.send(resultService);
+});
+
+subjectController.get('/teacher/:id', async (request, response) => {
+  const teacherId = Number(request.params.id);
+  const resultService = await SubjectService.getSubjectsByTeacher(teacherId);
+  response.send(resultService);
 });
 
 module.exports = subjectController;
